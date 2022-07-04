@@ -28,7 +28,8 @@
   },
   "engines": {
     "node": "18.x",
-    "npm": "8.x"
+    "npm": "8.x",
+    "pm2": "5.x"
   },
   "devDependencies": {
     "nodemon": "^2.0.18"
