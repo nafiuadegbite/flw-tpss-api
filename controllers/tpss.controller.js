@@ -66,6 +66,8 @@ const httpPostTpss = (req, res) => {
     });
 
     balance -= ratioValue;
+  } else {
+    res.status(400).json({ error: "request is not within limit" });
   }
 
   const response = {

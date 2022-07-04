@@ -1,8 +1,8 @@
 {
     "version": 2,
-    "name": "programming-languages-api",
+    "name": "flw-tpssapi",
     "builds": [
-      { "src": "app.js", "use": "@vercel/node" }
+      { "src": "./app.js", "use": "@vercel/node" }
     ],
     "routes": [
       { "src": "/(.*)", "dest": "/app.js" }
