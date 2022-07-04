@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "flw-tpss-api",
-      script: "./server.js",
+      script: "./app.js",
       instances: "max",
       env: {
         NODE_ENV: "development",

@@ -2,12 +2,12 @@
   "name": "flw-tpss-api",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon server.js",
+    "watch": "nodemon app.js",
     "start": "pm2-runtime start ecosystem.config.js --env production",
-    "deploy-cluster": "pm2 start server.js -i max"
+    "deploy-cluster": "pm2 start app.js -i max"
   },
   "repository": {
     "type": "git",
