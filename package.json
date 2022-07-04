@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon server.js",
-    "start": "npm run watch",
+    "start": "pm2-runtime start ecosystem.config.js --env production",
     "deploy-cluster": "pm2 start server.js -i max"
   },
   "repository": {
@@ -22,7 +22,8 @@
   "homepage": "https://github.com/nafiuadegbite/flw-tpss-api#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "pm2": "^5.2.0"
   },
   "engines": {
     "node": "18.x",
