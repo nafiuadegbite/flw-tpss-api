@@ -1,6 +1,12 @@
+function reducer(previous, current, index, array) {
+  const returns = previous.SplitValue + current.SplitValue;
+  return returns;
+}
+
 const httpPostTpss = (req, res) => {
   const { ID, Amount, Currency, Email, SplitInfo } = req.body;
 
+  let response;
   let balance = Amount;
   let splitInfo = SplitInfo;
   let splitBreakdown = [];
@@ -23,11 +29,9 @@ const httpPostTpss = (req, res) => {
           Amount: splitValue,
         });
       } else {
-        res
-          .status(400)
-          .json({
-            message: `The split value ${splitValue} is more than the balance ${balance}`,
-          });
+        res.status(400).json({
+          message: `The split value ${splitValue} is more than the balance ${balance}`,
+        });
         res.end();
       }
     });
@@ -38,26 +42,27 @@ const httpPostTpss = (req, res) => {
 
       if (splitValue >= 0) {
         let percentValue = (splitValue / 100) * balance;
-        balance -= percentValue;
-        splitBreakdown.push({
-          SplitEntityId: splitEntityId,
-          Amount: percentValue,
-        });
+
+        if (percentValue < balance) {
+          balance -= percentValue;
+          splitBreakdown.push({
+            SplitEntityId: splitEntityId,
+            Amount: percentValue,
+          });
+        } else {
+          res.status(400).json({
+            message: `The percent value ${percentValue} is more than the balance ${balance}`,
+          });
+          res.end();
+        }
       }
     });
 
-    let totalRatio = 0;
     let ratioValue = 0;
 
     ratioDetails.forEach((ratioDetail) => {
-      let splitValue = ratioDetail.SplitValue;
+      const totalRatio = ratioDetails.reduce(reducer);
 
-      if (splitValue >= 0) {
-        totalRatio += splitValue;
-      }
-    });
-
-    ratioDetails.forEach((ratioDetail) => {
       let splitValue = ratioDetail.SplitValue;
       let splitEntityId = ratioDetail.SplitEntityId;
 
@@ -74,14 +79,20 @@ const httpPostTpss = (req, res) => {
 
     balance -= ratioValue;
   } else {
-    res.status(400).json({ error: "request is not within limit" });
+    res.status(400).json({ message: `request is not within limit` });
+    res.end();
   }
 
-  const response = {
-    ID: ID,
-    Balance: balance,
-    SplitBreakdown: splitBreakdown,
-  };
+  if (!(balance < 0)) {
+    response = {
+      ID: ID,
+      Balance: balance,
+      SplitBreakdown: splitBreakdown,
+    };
+  } else {
+    res.status(400).json({ message: `The balance is less than 0` });
+    res.end();
+  }
 
   res.status(200).json(response);
 };
