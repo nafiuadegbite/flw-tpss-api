@@ -1,7 +1,11 @@
-function reducer(previous, current, index, array) {
+const reducer = (previous, current) => {
   const returns = previous.SplitValue + current.SplitValue;
   return returns;
-}
+};
+
+const sortArray = (arr, splitType) => {
+  return arr.filter((info) => info.SplitType === splitType);
+};
 
 const httpPostTpss = (req, res) => {
   const { ID, Amount, Currency, Email, SplitInfo } = req.body;
@@ -12,11 +16,9 @@ const httpPostTpss = (req, res) => {
   let splitBreakdown = [];
 
   if (splitInfo.length > 0 && splitInfo.length <= 20) {
-    let flatDetails = splitInfo.filter((info) => info.SplitType === "FLAT");
-    let percentageDetails = splitInfo.filter(
-      (info) => info.SplitType === "PERCENTAGE"
-    );
-    let ratioDetails = splitInfo.filter((info) => info.SplitType === "RATIO");
+    let flatDetails = sortArray(splitInfo, "FLAT");
+    let percentageDetails = sortArray(splitInfo, "PERCENTAGE");
+    let ratioDetails = sortArray(splitInfo, "RATIO");
 
     flatDetails.forEach((flatDetail) => {
       let splitValue = flatDetail.SplitValue;
@@ -61,7 +63,13 @@ const httpPostTpss = (req, res) => {
     let ratioValue = 0;
 
     ratioDetails.forEach((ratioDetail) => {
-      const totalRatio = ratioDetails.reduce(reducer);
+      let totalRatio;
+      if (ratioDetails.length === 1) {
+        totalRatio = ratioDetail.SplitValue;
+      } else {
+        totalRatio = ratioDetails.reduce(reducer);
+      }
+      console.log(totalRatio);
 
       let splitValue = ratioDetail.SplitValue;
       let splitEntityId = ratioDetail.SplitEntityId;
