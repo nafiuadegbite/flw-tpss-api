@@ -22,6 +22,13 @@ const httpPostTpss = (req, res) => {
           SplitEntityId: splitEntityId,
           Amount: splitValue,
         });
+      } else {
+        res
+          .status(400)
+          .json({
+            message: `The split value ${splitValue} is more than the balance ${balance}`,
+          });
+        res.end();
       }
     });
 
